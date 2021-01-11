@@ -11,6 +11,7 @@ Requirements...
     "slim/php-view": "^2.2",
     "slim/psr7": "^0.5.0",
     "ext-json": "*",
+    "php-di/slim-bridge": "^3.0",
     "rogerthomas84/skinny": "^2.0"
 }
 ```
