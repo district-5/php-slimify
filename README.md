@@ -49,8 +49,17 @@ $app->addView(
 /**
  * Add a file log.
  */
-$app->addFileLog(
-    '/path/to/log/app.log',
+//$app->addFileLog(
+//    '/path/to/log/app.log',
+//    \Monolog\Logger::DEBUG,
+//    1,
+//    'app'
+//);
+
+/**
+ * Add stdout log.
+ */
+$app->addStdOutLog(
     \Monolog\Logger::DEBUG,
     1,
     'app'

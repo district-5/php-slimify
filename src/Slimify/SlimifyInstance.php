@@ -2,7 +2,9 @@
 namespace Slimify;
 
 use DI\Container;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\App;
@@ -188,7 +190,7 @@ class SlimifyInstance extends App
      * @return $this
      * @noinspection PhpUndefinedClassInspection
      */
-    public function addFileLog(string $logFilePath, int $level = Logger::DEBUG, int $maxFiles = 5, string $name = 'app')
+    public function addFileLog(string $logFilePath, int $level = Logger::DEBUG, int $maxFiles = 5, string $name = 'app'): SlimifyInstance
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $this->container->set(
@@ -202,6 +204,30 @@ class SlimifyInstance extends App
                 $logger->pushHandler(
                     $fileHandler
                 );
+                return $logger;
+            }
+        );
+        return $this;
+    }
+
+    /**
+     * @param int $level (optional) default 100 (Debug)
+     * @param string $name (optional) default 'app'
+     * @return $this
+     */
+    public function addStdOutLog(int $level = Logger::DEBUG, string $name = 'app'): SlimifyInstance
+    {
+        $this->container->set(
+            'logger',
+            function (/** @noinspection PhpUnusedParameterInspection */Container $c) use ($level, $name) {
+                $output = "[%datetime%] %channel%.%level_name%: %message%\n";
+                $formatter = new LineFormatter($output);
+
+                $streamHandler = new StreamHandler('php://stdout', $level);
+                $streamHandler->setFormatter($formatter);
+
+                $logger = new Logger('LoggerName');
+                $logger->pushHandler($streamHandler);
                 return $logger;
             }
         );

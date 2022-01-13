@@ -11,13 +11,14 @@
     }
   ],
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.4",
     "slim/slim": "^4.0",
     "slim/php-view": "^2.2",
     "slim/psr7": "^0.5.0",
     "php-di/slim-bridge": "^3.0",
     "ext-json": "*",
-    "rogerthomas84/skinny": "^2.0"
+    "rogerthomas84/skinny": "^2.0",
+    "monolog/monolog": ">=2.3.5"
   },
   "autoload": {
     "psr-0": { "Slimify": "src" }
