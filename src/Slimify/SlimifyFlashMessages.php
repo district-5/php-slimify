@@ -1,8 +1,9 @@
 <?php
 namespace Slimify;
 
+use District5\SimpleSessionStore\SessionException;
 use Exception;
-use Skinny\Session;
+use District5\SimpleSessionStore\Session;
 
 /**
  * Class SlimifyFlashMessages
@@ -16,12 +17,13 @@ class SlimifyFlashMessages
     private $session;
 
     /**
-     * @var array|null
+     * @var array
      */
-    private $data = null;
+    private $data = [];
 
     /**
      * SlimifyFlashMessages constructor.
+     * @throws SessionException
      */
     public function __construct()
     {
@@ -33,8 +35,10 @@ class SlimifyFlashMessages
      *
      * @param string $message
      * @return SlimifyFlashMessages
+     * @noinspection PhpUnused
+     * @throws SessionException
      */
-    public function addSuccess(string $message)
+    public function addSuccess(string $message): SlimifyFlashMessages
     {
         $this->setup();
         $this->data[] = ['type' => 'success', 'message' => $message];
@@ -47,8 +51,10 @@ class SlimifyFlashMessages
      *
      * @param string $message
      * @return SlimifyFlashMessages
+     * @noinspection PhpUnused
+     * @throws SessionException
      */
-    public function addError(string $message)
+    public function addError(string $message): SlimifyFlashMessages
     {
         $this->setup();
         $this->data[] = ['type' => 'error', 'message' => $message];
@@ -61,8 +67,10 @@ class SlimifyFlashMessages
      *
      * @param string $message
      * @return SlimifyFlashMessages
+     * @noinspection PhpUnused
+     * @throws SessionException
      */
-    public function addInfo(string $message)
+    public function addInfo(string $message): SlimifyFlashMessages
     {
         $this->setup();
         $this->data[] = ['type' => 'info', 'message' => $message];
@@ -75,8 +83,10 @@ class SlimifyFlashMessages
      *
      * @param string $message
      * @return SlimifyFlashMessages
+     * @noinspection PhpUnused
+     * @throws SessionException
      */
-    public function addWarning(string $message)
+    public function addWarning(string $message): SlimifyFlashMessages
     {
         $this->setup();
         $this->data[] = ['type' => 'warning', 'message' => $message];
@@ -86,11 +96,16 @@ class SlimifyFlashMessages
 
     /**
      * @return array
+     * @noinspection PhpUnused
+     * @throws SessionException
      */
-    public function getMessages()
+    public function getMessages(): array
     {
         $this->setup();
         $messages = $this->data;
+        if ($messages === null) {
+            return [];
+        }
         $this->data = [];
         $this->save();
         return $messages;
@@ -109,6 +124,7 @@ class SlimifyFlashMessages
 
     /**
      * Setup the local variables.
+     * @throws SessionException
      */
     private function setup()
     {
