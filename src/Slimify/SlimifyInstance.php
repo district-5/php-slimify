@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpUnused */
+
 namespace Slimify;
 
 use DI\Container;
@@ -6,7 +7,9 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Slim\App;
 use Slim\Middleware\ErrorMiddleware;
 use Slim\Psr7\Request;
@@ -85,7 +88,7 @@ class SlimifyInstance extends App
      * @return $this
      * @noinspection PhpUnused
      */
-    public function addView(string $templatePath, string $layout, array $params = [], $key = 'default')
+    public function addView(string $templatePath, string $layout, array $params = [], string $key = 'default'): SlimifyInstance
     {
         $view = new PhpRenderer($templatePath);
         $view->setLayout($layout);
@@ -100,8 +103,9 @@ class SlimifyInstance extends App
     /**
      * @param string $key
      * @return PhpRenderer|null
+     * @noinspection PhpUnused
      */
-    public function getView($key = 'default')
+    public function getView(string $key = 'default'): ?PhpRenderer
     {
         if (array_key_exists($key, $this->views)) {
             return $this->views[$key];
@@ -115,6 +119,8 @@ class SlimifyInstance extends App
      *
      * @param string $key
      * @return mixed|null
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __get(string $key)
     {
@@ -132,7 +138,7 @@ class SlimifyInstance extends App
      * @param ContainerInterface $container
      * @return $this
      */
-    public function setContainer(ContainerInterface $container)
+    public function setContainer(ContainerInterface $container): SlimifyInstance
     {
         $this->container = $container;
         return $this;
@@ -142,8 +148,9 @@ class SlimifyInstance extends App
      * @param string $cacheLocation
      * @param bool $deleteInDevelopment
      * @return $this
+     * @noinspection PhpUnused
      */
-    public function addRouterWithCache(string $cacheLocation, $deleteInDevelopment = true): SlimifyInstance
+    public function addRouterWithCache(string $cacheLocation, bool $deleteInDevelopment = true): SlimifyInstance
     {
         if ($deleteInDevelopment === true && $this->isDevelopment() === true && file_exists($cacheLocation)) {
             unlink($cacheLocation);
@@ -166,6 +173,7 @@ class SlimifyInstance extends App
 
     /**
      * @return bool
+     * @noinspection PhpUnused
      */
     public function isProduction(): bool
     {
@@ -188,16 +196,15 @@ class SlimifyInstance extends App
      * @param int $maxFiles (optional) default 5
      * @param string $name (optional) default 'app'
      * @return $this
-     * @noinspection PhpUndefinedClassInspection
+     * @noinspection PhpUnused
      */
     public function addFileLog(string $logFilePath, int $level = Logger::DEBUG, int $maxFiles = 5, string $name = 'app'): SlimifyInstance
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         $this->container->set(
             'logger',
             function (/** @noinspection PhpUnusedParameterInspection */Container $c) use ($logFilePath, $level, $maxFiles, $name) {
                 $logger = new Logger($name);
-                $formatter = new \Monolog\Formatter\LineFormatter();
+                $formatter = new LineFormatter();
                 $fileHandler = new RotatingFileHandler($logFilePath, $maxFiles, $level);
                 $fileHandler->setFilenameFormat('{date}-{filename}', 'Y-m-d');
                 $fileHandler->setFormatter($formatter);
@@ -214,6 +221,7 @@ class SlimifyInstance extends App
      * @param int $level (optional) default 100 (Debug)
      * @param string $name (optional) default 'app'
      * @return $this
+     * @noinspection PhpUnused
      */
     public function addStdOutLog(int $level = Logger::DEBUG, string $name = 'app'): SlimifyInstance
     {
@@ -239,14 +247,18 @@ class SlimifyInstance extends App
      *
      * @return SlimifyResponse
      */
-    public function response()
+    public function response(): SlimifyResponse
     {
         return new SlimifyResponse(
             $this->response
         );
     }
 
-    public function flash()
+    /**
+     * @return SlimifyFlashMessages
+     * @noinspection PhpUnused
+     */
+    public function flash(): SlimifyFlashMessages
     {
         if ($this->flashMessages === null) {
             $this->flashMessages = new SlimifyFlashMessages();
@@ -256,8 +268,9 @@ class SlimifyInstance extends App
 
     /**
      * @return array
+     * @noinspection PhpUnused
      */
-    public function getAllPostParams()
+    public function getAllPostParams(): ?array
     {
         if ($this->bodyParams === null) {
             $this->bodyParams = $this->request->getParsedBody();
@@ -271,8 +284,9 @@ class SlimifyInstance extends App
      *
      * @param bool $asArray
      * @return array|stdClass
+     * @noinspection PhpUnused
      */
-    public function getJsonBody($asArray = true)
+    public function getJsonBody(bool $asArray = true)
     {
         if ($this->jsonBody !== null) {
             if ($asArray === true) {
@@ -288,7 +302,7 @@ class SlimifyInstance extends App
             return null;
         }
         $string = $body->__toString();
-        if ($string === null || strlen($string) < 3) {
+        if (strlen($string) < 3) {
             return null;
         }
         if ($asArray === true) {
@@ -310,8 +324,9 @@ class SlimifyInstance extends App
 
     /**
      * @return string|null
+     * @noinspection PhpUnused
      */
-    public function getIp()
+    public function getIp(): ?string
     {
         $params = $this->request->getServerParams();
         if (array_key_exists('REMOTE_ADDR', $params)) {
@@ -343,10 +358,11 @@ class SlimifyInstance extends App
      * Get an integer post parameter (POST).
      *
      * @param string $key
-     * @param null|mixed $default
-     * @return int|null|mixed
+     * @param int|null $default
+     * @return int|null
+     * @noinspection PhpUnused
      */
-    public function getPostParamInt(string $key, $default = null)
+    public function getPostParamInt(string $key, int $default = null): ?int
     {
         return $this->paramToInt(
             $this->getPostParam($key, $default),
@@ -376,10 +392,10 @@ class SlimifyInstance extends App
     /**
      * Get an integer query parameter (GET).
      * @param string $key
-     * @param null|mixed $default
-     * @return int|null|mixed
+     * @param int|null $default
+     * @return int|null
      */
-    public function getQueryParamInt(string $key, $default = null)
+    public function getQueryParamInt(string $key, int $default = null): ?int
     {
         return $this->paramToInt(
             $this->getQueryParam($key, $default),
@@ -392,19 +408,21 @@ class SlimifyInstance extends App
      *
      * @param string $key
      * @param int $default
-     * @return int|mixed|null
+     * @return int|null
+     * @noinspection PhpUnused
      */
-    public function getPageNumber(string $key = 'page', int $default = 1)
+    public function getPageNumber(string $key = 'page', int $default = 1): ?int
     {
         return $this->getQueryParamInt($key, $default);
     }
 
     /**
-     * @param mixed $val
-     * @param mixed $default
+     * @param string|int|mixed $val
+     * @param int|null $default
      * @return int
+     * @noinspection PhpUnused
      */
-    protected function paramToInt($val, $default)
+    protected function paramToInt($val, int $default = null): int
     {
         if (is_int($val)) {
             return $val;
@@ -420,8 +438,11 @@ class SlimifyInstance extends App
 
     /**
      * @return Logger
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @noinspection PhpUnused
      */
-    public function log()
+    public function log(): Logger
     {
         return $this->container->get('logger');
     }
@@ -430,8 +451,9 @@ class SlimifyInstance extends App
      * @param Request $request
      * @param Response $response
      * @return $this
+     * @noinspection PhpUnused
      */
-    public function setInterfaces(Request $request, Response $response)
+    public function setInterfaces(Request $request, Response $response): SlimifyInstance
     {
         $this->request = $request;
         $this->response = $response;
@@ -441,8 +463,9 @@ class SlimifyInstance extends App
     /**
      * @param array $args
      * @return $this
+     * @noinspection PhpUnused
      */
-    public function setArguments(array $args)
+    public function setArguments(array $args): SlimifyInstance
     {
         $this->args = $args;
         return $this;
@@ -450,8 +473,9 @@ class SlimifyInstance extends App
 
     /**
      * @return array
+     * @noinspection PhpUnused
      */
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->args;
     }
@@ -460,6 +484,7 @@ class SlimifyInstance extends App
      * @param string $key
      * @param mixed $default (optional) default null
      * @return mixed|null
+     * @noinspection PhpUnused
      */
     public function getArgument(string $key, $default = null)
     {
@@ -474,8 +499,9 @@ class SlimifyInstance extends App
 
     /**
      * @return bool
+     * @noinspection PhpUnused
      */
-    public function isAjaxRequest()
+    public function isAjaxRequest(): bool
     {
         return ($this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest');
     }

@@ -26,7 +26,7 @@ class SlimifyStatic
 
     /**
      * Env constructor. Protected to avoid direct construction.
-     * @param $app
+     * @param SlimifyInstance $app
      */
     protected function __construct(SlimifyInstance $app)
     {
@@ -49,8 +49,9 @@ class SlimifyStatic
 
     /**
      * @return SlimifyInstance
+     * @noinspection PhpUnused
      */
-    public function getApp()
+    public function getApp(): SlimifyInstance
     {
         return $this->app;
     }
@@ -58,6 +59,7 @@ class SlimifyStatic
     /**
      * @param array $params
      * @return $this
+     * @noinspection PhpUnused
      */
     public function setErrorViewParams(array $params): SlimifyStatic
     {
@@ -67,6 +69,7 @@ class SlimifyStatic
 
     /**
      * @return array
+     * @noinspection PhpUnused
      */
     public function getErrorViewParams(): array
     {
