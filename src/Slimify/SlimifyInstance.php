@@ -4,6 +4,7 @@ namespace Slimify;
 
 use DI\Container;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -228,14 +229,37 @@ class SlimifyInstance extends App
         $this->container->set(
             'logger',
             function (/** @noinspection PhpUnusedParameterInspection */Container $c) use ($level, $name) {
-                $output = "[%datetime%] %channel%.%level_name%: %message%\n";
-                $formatter = new LineFormatter($output);
+                $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
 
                 $streamHandler = new StreamHandler('php://stdout', $level);
                 $streamHandler->setFormatter($formatter);
 
-                $logger = new Logger('LoggerName');
+                $logger = new Logger($name);
                 $logger->pushHandler($streamHandler);
+                return $logger;
+            }
+        );
+        return $this;
+    }
+
+    /**
+     * @param int $level (optional) default 100 (Debug)
+     * @param string $name (optional) default 'app'
+     * @return $this
+     * @noinspection PhpUnused
+     */
+    public function addStdErrLog(int $level = Logger::DEBUG, string $name = 'app'): SlimifyInstance
+    {
+        $this->container->set(
+            'logger',
+            function (/** @noinspection PhpUnusedParameterInspection */Container $c) use ($level, $name) {
+                $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
+
+                $errorHandler = new ErrorLogHandler();
+                $errorHandler->setFormatter($formatter);
+
+                $logger = new Logger($name);
+                $logger->pushHandler($errorHandler);
                 return $logger;
             }
         );
