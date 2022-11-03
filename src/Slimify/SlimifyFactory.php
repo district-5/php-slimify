@@ -1,8 +1,8 @@
-<?php
+<?php /** @noinspection PhpUnused */
+
 namespace Slimify;
 
 use DI\Container;
-use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
 
 /**
@@ -16,7 +16,7 @@ class SlimifyFactory extends AppFactory
      * @param bool $isDevelopment
      * @return SlimifyInstance
      */
-    public static function createSlimify(Container $container, bool $isDevelopment)
+    public static function createSlimify(Container $container, bool $isDevelopment): SlimifyInstance
     {
         $instance = new SlimifyInstance(
             self::determineResponseFactory(),

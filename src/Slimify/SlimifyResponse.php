@@ -14,7 +14,7 @@ class SlimifyResponse
     /**
      * @var ResponseInterface|null
      */
-    protected $response = null;
+    protected ?ResponseInterface $response = null;
 
     /**
      * SlimifyResponse constructor.
@@ -30,7 +30,7 @@ class SlimifyResponse
      * @param int $status
      * @return ResponseInterface
      */
-    public function json($payload, $status = 200)
+    public function json($payload, $status = 200): ResponseInterface
     {
         return $this->jsonFromString(
             json_encode($payload),
@@ -43,11 +43,13 @@ class SlimifyResponse
      * @param int $status
      * @return ResponseInterface
      */
-    public function jsonFromString(string $payload, $status = 200)
+    public function jsonFromString(string $payload, $status = 200): ResponseInterface
     {
         $response = $this->response->withHeader(
             'Content-Type',
             'application/json'
+        )->withStatus(
+            $status
         );
         $response->getBody()->write(
             $payload
@@ -59,13 +61,19 @@ class SlimifyResponse
      * @param string $content
      * @param int $status
      * @return ResponseInterface
+     * @noinspection PhpUnused
      */
-    public function plainText($content, $status = 200)
+    public function plainText($content, $status = 200): ResponseInterface
     {
         $response = $this->response->withHeader(
             'Content-Type',
             'text/plain'
-        )->withHeader('Content-Length', strlen($content));
+        )->withHeader(
+            'Content-Length',
+            strlen($content)
+        )->withStatus(
+            $status
+        );
         $response->getBody()->write(
             $content
         );
@@ -77,14 +85,15 @@ class SlimifyResponse
      * @param string $fileName
      * @param string $contentType
      * @return ResponseInterface
+     * @noinspection PhpUnused
      */
-    public function sendFile(string $content, string $fileName, string $contentType = 'text/plain')
+    public function sendFile(string $content, string $fileName, string $contentType = 'text/plain'): ResponseInterface
     {
         $response = new Response();
         $response->getBody()->write(
             $content
         );
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+
         return $response->withHeader(
             'Content-Type',
             sprintf('%s; charset=utf-8', $contentType)
@@ -99,8 +108,9 @@ class SlimifyResponse
      * @param string $url
      * @param int $status
      * @return ResponseInterface
+     * @noinspection PhpUnused
      */
-    public function redirect($url, $status = 302)
+    public function redirect($url, $status = 302): ResponseInterface
     {
         return $this->response->withHeader(
             'Location',

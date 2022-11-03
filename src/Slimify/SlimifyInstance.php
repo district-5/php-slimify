@@ -27,32 +27,32 @@ class SlimifyInstance extends App
     /**
      * @var array
      */
-    protected $storage = [];
+    protected array $storage = [];
 
     /**
      * @var PhpRenderer[]
      */
-    protected $views = [];
+    protected array $views = [];
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    protected $development;
+    protected ?bool $development = null;
 
     /**
-     * @var Request
+     * @var Request|null
      */
-    protected $request;
+    protected ?Request $request = null;
 
     /**
-     * @var Response
+     * @var Response|null
      */
-    protected $response;
+    protected ?Response $response = null;
 
     /**
      * @var array|null
      */
-    protected $bodyParams = null;
+    protected ?array $bodyParams = null;
 
     /**
      * @var array|stdClass
@@ -62,22 +62,22 @@ class SlimifyInstance extends App
     /**
      * @var array|null
      */
-    protected $queryParams = null;
+    protected ?array $queryParams = null;
 
     /**
-     * @var ErrorMiddleware
+     * @var ErrorMiddleware|null
      */
-    protected $errorMiddleware = null;
+    protected ?ErrorMiddleware $errorMiddleware = null;
 
     /**
      * @var array
      */
-    protected $args = [];
+    protected array $args = [];
 
     /**
      * @var SlimifyFlashMessages|null
      */
-    protected $flashMessages = null;
+    protected ?SlimifyFlashMessages $flashMessages = null;
 
     /**
      * Set the view to use, optionally providing 'key' to handle multiple instances of views.
@@ -203,7 +203,7 @@ class SlimifyInstance extends App
     {
         $this->container->set(
             'logger',
-            function (/** @noinspection PhpUnusedParameterInspection */Container $c) use ($logFilePath, $level, $maxFiles, $name) {
+            function (/** @noinspection PhpUnusedParameterInspection */ Container $c) use ($logFilePath, $level, $maxFiles, $name) {
                 $logger = new Logger($name);
                 $formatter = new LineFormatter();
                 $fileHandler = new RotatingFileHandler($logFilePath, $maxFiles, $level);
@@ -228,7 +228,7 @@ class SlimifyInstance extends App
     {
         $this->container->set(
             'logger',
-            function (/** @noinspection PhpUnusedParameterInspection */Container $c) use ($level, $name) {
+            function (/** @noinspection PhpUnusedParameterInspection */ Container $c) use ($level, $name) {
                 $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
 
                 $streamHandler = new StreamHandler('php://stdout', $level);
@@ -252,7 +252,7 @@ class SlimifyInstance extends App
     {
         $this->container->set(
             'logger',
-            function (/** @noinspection PhpUnusedParameterInspection */Container $c) use ($level, $name) {
+            function (/** @noinspection PhpUnusedParameterInspection */ Container $c) use ($level, $name) {
                 $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
 
                 $errorHandler = new ErrorLogHandler();

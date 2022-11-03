@@ -1,4 +1,5 @@
 <?php
+
 namespace Slimify;
 
 /**
@@ -10,19 +11,19 @@ class SlimifyStatic
     /**
      * Static variable, holding the instance of this Singleton.
      *
-     * @var SlimifyStatic
+     * @var SlimifyStatic|null
      */
-    protected static $_instance = null;
+    protected static ?SlimifyStatic $_instance = null;
 
     /**
      * @var SlimifyInstance
      */
-    private $app;
+    private SlimifyInstance $app;
 
     /**
      * @var array
      */
-    private $errorViewParams = [];
+    private array $errorViewParams = [];
 
     /**
      * Env constructor. Protected to avoid direct construction.

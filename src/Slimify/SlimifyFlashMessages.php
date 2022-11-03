@@ -1,9 +1,10 @@
 <?php
+
 namespace Slimify;
 
+use District5\SimpleSessionStore\Session;
 use District5\SimpleSessionStore\SessionException;
 use Exception;
-use District5\SimpleSessionStore\Session;
 
 /**
  * Class SlimifyFlashMessages
