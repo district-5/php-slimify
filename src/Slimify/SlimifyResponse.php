@@ -17,12 +17,46 @@ class SlimifyResponse
     protected ?ResponseInterface $response = null;
 
     /**
+     * @var SlimifyCors|null
+     */
+    protected ?SlimifyCors $cors = null;
+
+    /**
      * SlimifyResponse constructor.
      * @param ResponseInterface $response
      */
     public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
+    }
+
+    /**
+     * @param SlimifyCors $cors
+     * @return $this
+     */
+    public function setCors(SlimifyCors $cors): self
+    {
+        $this->cors = $cors;
+        return $this;
+    }
+
+    /**
+     * Remove cors from the response.
+     *
+     * @return $this
+     */
+    public function unsetCors(): self
+    {
+        $this->cors = null;
+        return $this;
+    }
+
+    /**
+     * @return SlimifyCors|null
+     */
+    public function getCors(): ?SlimifyCors
+    {
+        return $this->cors;
     }
 
     /**
@@ -54,7 +88,21 @@ class SlimifyResponse
         $response->getBody()->write(
             $payload
         );
-        return $response;
+
+        return $this->addCorsToResponseIfNecessary(
+            $response
+        );
+    }
+
+    /**
+     * @param int $code
+     * @return Response
+     */
+    public function httpCodeResponse(int $code): Response
+    {
+        return $this->addCorsToResponseIfNecessary(
+            $this->response->withStatus($code)
+        );
     }
 
     /**
@@ -118,5 +166,26 @@ class SlimifyResponse
         )->withStatus(
             $status
         );
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    protected function addCorsToResponseIfNecessary(ResponseInterface $response): ResponseInterface
+    {
+        if (null === $this->getCors()) {
+            return $response;
+        }
+
+        $corsArray = $this->getCors()->getResponseHeaders();
+        foreach ($corsArray as $key => $value) {
+            $response = $response->withHeader(
+                $key,
+                $value
+            );
+        }
+
+        return $response;
     }
 }
