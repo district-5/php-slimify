@@ -28,6 +28,10 @@ class SlimifyResponse
     public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
+        $cors = SlimifyCors::retrieve();
+        if ($cors->hasBeenConfigured()) {
+            $this->setCors($cors);
+        }
     }
 
     /**

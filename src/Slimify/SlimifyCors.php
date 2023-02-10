@@ -49,6 +49,11 @@ class SlimifyCors
     private int $maxAge = 0;
 
     /**
+     * @var bool
+     */
+    private bool $hasData = false;
+
+    /**
      * Retrieve an instance of this object.
      *
      * @return SlimifyCors
@@ -69,6 +74,7 @@ class SlimifyCors
     public function setAllowedOrigins(array $allowedOrigins): self
     {
         $this->allowedOrigins = $allowedOrigins;
+        $this->hasData = true;
         return $this;
     }
 
@@ -80,6 +86,7 @@ class SlimifyCors
     public function setAllowedMethods(array $allowedMethods): self
     {
         $this->allowedMethods = $allowedMethods;
+        $this->hasData = true;
         return $this;
     }
 
@@ -91,6 +98,7 @@ class SlimifyCors
     public function setAllowedHeaders(array $allowedHeaders): self
     {
         $this->allowedHeaders = $allowedHeaders;
+        $this->hasData = true;
         return $this;
     }
 
@@ -102,17 +110,19 @@ class SlimifyCors
     public function setExposedHeaders(array $exposedHeaders): self
     {
         $this->exposedHeaders = $exposedHeaders;
+        $this->hasData = true;
         return $this;
     }
 
     /**
-     * Set the allow credentials.
+     * Set the 'allow' credentials.
      * @param bool $allowCredentials
      * @return SlimifyCors
      */
     public function setAllowCredentials(bool $allowCredentials): self
     {
         $this->allowCredentials = $allowCredentials;
+        $this->hasData = true;
         return $this;
     }
 
@@ -124,6 +134,7 @@ class SlimifyCors
     public function setMaxAge(int $maxAge): self
     {
         $this->maxAge = $maxAge;
+        $this->hasData = true;
         return $this;
     }
 
@@ -208,5 +219,13 @@ class SlimifyCors
         }
 
         return $all;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBeenConfigured(): bool
+    {
+        return $this->hasData;
     }
 }
