@@ -176,7 +176,7 @@ class SlimifyResponse
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    protected function addCorsToResponseIfNecessary(ResponseInterface $response): ResponseInterface
+    public function addCorsToResponseIfNecessary(ResponseInterface $response): ResponseInterface
     {
         if (null === $this->getCors()) {
             return $response;
