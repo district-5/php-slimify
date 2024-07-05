@@ -136,10 +136,10 @@ class SlimifyResponse
      * @param string $content
      * @param string $fileName
      * @param string $contentType
+     * @param string $encoding
      * @return ResponseInterface
-     * @noinspection PhpUnused
      */
-    public function sendFile(string $content, string $fileName, string $contentType = 'text/plain'): ResponseInterface
+    public function sendFile(string $content, string $fileName, string $contentType = 'text/plain', string $encoding = 'utf-8'): ResponseInterface
     {
         $response = new Response();
         $response->getBody()->write(
@@ -148,7 +148,7 @@ class SlimifyResponse
 
         return $response->withHeader(
             'Content-Type',
-            sprintf('%s; charset=utf-8', $contentType)
+            sprintf('%s; charset=%s', $contentType, $encoding)
         )->withHeader(
             'Content-Disposition', 'attachment; filename=' . $fileName
         )->withStatus(
@@ -191,5 +191,14 @@ class SlimifyResponse
         }
 
         return $response;
+    }
+
+    /**
+     * Clear the body of the response.
+     */
+    public function clearResponse(): void
+    {
+        $responseClass = get_class($this->response);
+        $this->response = new $responseClass();
     }
 }

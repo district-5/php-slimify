@@ -12,7 +12,7 @@ use Slim\Factory\AppFactory;
 class SlimifyFactory extends AppFactory
 {
     /**
-     * @param Container|null $container
+     * @param Container $container
      * @param bool $isDevelopment
      * @return SlimifyInstance
      */

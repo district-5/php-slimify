@@ -15,12 +15,12 @@ class SlimifyFlashMessages
     /**
      * @var Session
      */
-    private $session;
+    private Session $session;
 
     /**
      * @var array
      */
-    private $data = [];
+    private array $data = [];
 
     /**
      * SlimifyFlashMessages constructor.
@@ -103,10 +103,10 @@ class SlimifyFlashMessages
     public function getMessages(): array
     {
         $this->setup();
-        $messages = $this->data;
-        if ($messages === null) {
+        if (empty($this->data)) {
             return [];
         }
+        $messages = $this->data;
         $this->data = [];
         $this->save();
         return $messages;
@@ -115,29 +115,28 @@ class SlimifyFlashMessages
     /**
      * Save the changes to the session.
      */
-    private function save()
+    private function save(): void
     {
         try {
             $this->session->set('slimifyFlash', $this->data);
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
     /**
-     * Setup the local variables.
+     * Set up the local variables.
+     * @return void
      * @throws SessionException
      */
-    private function setup()
+    private function setup(): void
     {
-        if (null === $this->session) {
+        if (!isset($this->session)) {
             $this->session = Session::getInstance();
         }
-        if (null !== $this->data) {
-            return;
-        }
+
         try {
             $flash = $this->session->get('slimifyFlash');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $flash = [];
         }
         if (!is_array($flash)) {

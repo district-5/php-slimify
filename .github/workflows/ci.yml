@@ -1,0 +1,34 @@
+name: CI
+on: [push]
+
+jobs:
+  unit-test:
+    name: Unit testing
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: slimify-group
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install composer dependencies
+        uses: php-actions/composer@v6
+        with:
+          php_version: 8.3
+          php_extensions: "xdebug calendar sockets"
+
+      - name: Run unit tests
+        uses: php-actions/phpunit@v3
+        env:
+          XDEBUG_MODE: coverage
+        with:
+          version: 9.6
+          php_version: 8.3
+          php_extensions: "xdebug calendar sockets"
+          args: "-d date.timezone=UTC"
+          configuration: phpunit.xml
+          testsuite: TestSuite
+          bootstrap: vendor/autoload.php
