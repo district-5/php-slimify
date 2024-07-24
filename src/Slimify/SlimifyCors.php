@@ -228,4 +228,18 @@ class SlimifyCors
     {
         return $this->hasData;
     }
+
+    /**
+     * @return void
+     */
+    public function reset(): void
+    {
+        $this->allowedOrigins = [];
+        $this->allowedMethods = [];
+        $this->allowedHeaders = [];
+        $this->exposedHeaders = [];
+        $this->allowCredentials = false;
+        $this->maxAge = 0;
+        $this->hasData = false;
+    }
 }

@@ -100,6 +100,11 @@ class SlimifyResponseTest extends TestAbstract
         $this->assertEquals('https://example.com', $redirect->getHeaderLine('Location'));
 
         $response->clearResponse();
+
+        SlimifyCors::retrieve()->reset();
+        $response->setCors(
+            SlimifyCors::retrieve()->setAllowedOrigins(['foo.example.com'])
+        );
         $fileResponse = $response->sendFile(
             'foo bar',
             'foobar.txt',
@@ -109,5 +114,6 @@ class SlimifyResponseTest extends TestAbstract
         $this->assertEquals('foo bar', $fileResponse->getBody()->__toString());
         $this->assertEquals('no/type; charset=utf-16', $fileResponse->getHeaderLine('Content-Type'));
         $this->assertEquals('attachment; filename=foobar.txt', $fileResponse->getHeaderLine('Content-Disposition'));
+        $this->assertEquals('foo.example.com', $fileResponse->getHeaderLine('Access-Control-Allow-Origin'));
     }
 }

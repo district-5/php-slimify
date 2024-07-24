@@ -146,13 +146,15 @@ class SlimifyResponse
             $content
         );
 
-        return $response->withHeader(
-            'Content-Type',
-            sprintf('%s; charset=%s', $contentType, $encoding)
-        )->withHeader(
-            'Content-Disposition', 'attachment; filename=' . $fileName
-        )->withStatus(
-            200
+        return $this->addCorsToResponseIfNecessary(
+            $response->withHeader(
+                'Content-Type',
+                sprintf('%s; charset=%s', $contentType, $encoding)
+            )->withHeader(
+                'Content-Disposition', 'attachment; filename=' . $fileName
+            )->withStatus(
+                200
+            )
         );
     }
 
