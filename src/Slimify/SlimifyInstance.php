@@ -91,6 +91,7 @@ class SlimifyInstance extends App
     public function response(): SlimifyResponse
     {
         return new SlimifyResponse(
+            $this->request,
             $this->response
         );
     }

@@ -187,15 +187,20 @@ class SlimifyCors
     }
 
     /**
+     * @param string|null $origin
      * @return array
      */
-    public function getResponseHeaders(): array
+    public function getResponseHeaders(?string $origin = null): array
     {
         $all = [];
         if (!empty($this->getAllowedOrigins())) {
             $all['Access-Control-Allow-Origin'] = implode(', ', $this->allowedOrigins);
         } else {
             $all['Access-Control-Allow-Origin'] = '*';
+        }
+
+        if (!empty($origin) && in_array($origin, $this->getAllowedOrigins(), true)) {
+            $all['Access-Control-Allow-Origin'] = $origin;
         }
 
         if (!empty($this->getAllowedMethods())) {

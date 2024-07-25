@@ -2,6 +2,7 @@
 
 namespace Slimify;
 
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Response;
 
@@ -17,6 +18,11 @@ class SlimifyResponse
     protected ?ResponseInterface $response = null;
 
     /**
+     * @var RequestInterface|null
+     */
+    protected ?RequestInterface $request = null;
+
+    /**
      * @var SlimifyCors|null
      */
     protected ?SlimifyCors $cors = null;
@@ -25,8 +31,9 @@ class SlimifyResponse
      * SlimifyResponse constructor.
      * @param ResponseInterface $response
      */
-    public function __construct(ResponseInterface $response)
+    public function __construct(RequestInterface $request, ResponseInterface $response)
     {
+        $this->request = $request;
         $this->response = $response;
         $cors = SlimifyCors::retrieve();
         if ($cors->hasBeenConfigured()) {
@@ -184,7 +191,12 @@ class SlimifyResponse
             return $response;
         }
 
-        $corsArray = $this->getCors()->getResponseHeaders();
+        $requestOrigin = null;
+        if ($this->request !== null) {
+            $requestOrigin = $this->request->getHeaderLine('Origin');
+        }
+
+        $corsArray = $this->getCors()->getResponseHeaders($requestOrigin);
         foreach ($corsArray as $key => $value) {
             $response = $response->withHeader(
                 $key,

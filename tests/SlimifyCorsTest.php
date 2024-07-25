@@ -18,6 +18,10 @@
 
 namespace SlimifyTests;
 
+use Slim\Psr7\Headers;
+use Slim\Psr7\Request;
+use Slim\Psr7\Stream;
+use Slim\Psr7\Uri;
 use Slimify\SlimifyCors;
 
 /**
@@ -69,5 +73,36 @@ class SlimifyCorsTest extends TestAbstract
         $this->assertEquals('GET, POST', $cors->getResponseHeaders()['Access-Control-Allow-Methods']);
         $this->assertEquals('true', $cors->getResponseHeaders()['Access-Control-Allow-Credentials']);
         $this->assertEquals('X-Test-Header', $cors->getResponseHeaders()['Access-Control-Expose-Headers']);
+    }
+
+    public function testHeadersWhenOriginFound()
+    {
+        $request = new Request(
+            'POST',
+            new Uri('https', 'example.com', 443, '/test', 'foo=bar&baz=qux&page=123&float-page=1.234&overflow-page=02'),
+            new Headers(['Origin' => 'https://example.com']),
+            ['IS_A_COOKIE' => 'NOT REALLY'],
+            ['IS_A_SERVER' => 'NOT REALLY'],
+            new Stream(fopen('php://temp', 'r+')),
+        );
+        $cors = SlimifyCors::retrieve();
+        $cors->reset();
+
+        $cors->setAllowedOrigins(['https://example.com', 'https://example2.com']);
+
+        $responseHeaders = $cors->getResponseHeaders($request->getHeaderLine('Origin'));
+        $this->assertEquals('https://example.com', $responseHeaders['Access-Control-Allow-Origin']);
+
+        $newRequest = new Request(
+            'POST',
+            new Uri('https', 'example2.com', 443, '/test', 'foo=bar&baz=qux&page=123&float-page=1.234&overflow-page=02'),
+            new Headers(['Origin' => 'https://example2.com']),
+            ['IS_A_COOKIE' => 'NOT REALLY'],
+            ['IS_A_SERVER' => 'NOT REALLY'],
+            new Stream(fopen('php://temp', 'r+')),
+        );
+
+        $responseHeaders = $cors->getResponseHeaders($newRequest->getHeaderLine('Origin'));
+        $this->assertEquals('https://example2.com', $responseHeaders['Access-Control-Allow-Origin']);
     }
 }
