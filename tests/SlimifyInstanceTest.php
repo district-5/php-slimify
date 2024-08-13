@@ -41,12 +41,15 @@ class SlimifyInstanceTest extends TestAbstract
             new ResponseFactory(),
             $container
         );
-        $instance->setArguments(['foo' => 'bar', 'baz' => 'qux', 'empty' => '']);
-        $this->assertCount(3, $instance->getArguments());
+        $instance->setArguments(['foo' => 'bar', 'baz' => 'qux', 'empty' => '', 'mongoId' => '5f9b1b3b7f7f4b0007f7f4b0']);
+        $this->assertCount(4, $instance->getArguments());
         $this->assertEquals('bar', $instance->getArgument('foo'));
         $this->assertEquals('qux', $instance->getArgument('baz'));
         $this->assertNull($instance->getArgument('not_found'));
         $this->assertEquals('DEFAULT', $instance->getArgument('empty', 'DEFAULT'));
+        $this->assertEquals('5f9b1b3b7f7f4b0007f7f4b0', $instance->getArgumentMongoId('mongoId'));
+        $this->assertEquals('foo', $instance->getArgumentMongoId('not_found', 'foo'));
+        $this->assertEquals('foo', $instance->getArgumentMongoId('foo', 'foo'));
 
         $instance->setContainer($container);
         $instance->setDevelopment(true);

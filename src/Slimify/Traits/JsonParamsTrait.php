@@ -2,6 +2,8 @@
 
 namespace Slimify\Traits;
 
+use Slimify\Helper\Exception\InvalidJsonRequestException;
+use Slimify\Helper\JsonParser;
 use stdClass;
 
 /**
@@ -19,6 +21,25 @@ trait JsonParamsTrait
      * @var stdClass|null
      */
     protected stdClass|null $jsonBodyObject = null;
+
+    /**
+     * @var JsonParser
+     */
+    protected JsonParser $jsonParser;
+
+    /**
+     * Get an instance of JSON Parser
+     *
+     * @return JsonParser
+     * @throws InvalidJsonRequestException
+     */
+    public function getJsonParser(): JsonParser
+    {
+        if (!isset($this->jsonParser)) {
+            $this->jsonParser = new JsonParser($this->request);
+        }
+        return $this->jsonParser;
+    }
 
     /**
      * Get the JSON decoded body from a request.

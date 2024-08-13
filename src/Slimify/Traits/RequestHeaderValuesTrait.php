@@ -35,6 +35,17 @@ trait RequestHeaderValuesTrait
      */
     public function isAjaxRequest(): bool
     {
-        return ($this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest');
+        return $this->getHeaderLine('X-Requested-With') === 'XMLHttpRequest';
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getHeaderLine(string $key): string
+    {
+        return $this->request->getHeaderLine(
+            $key
+        );
     }
 }
