@@ -143,7 +143,7 @@ $app->get('/', function (Request $request, Response $response, $args) use ($app)
 
 $app->post('/json-endpoint', function (Request $request, Response $response, $args) use ($app) {
     $app->setInterfaces($request, $response);
-    
+
     $jsonParser = $app->getJsonParser();
     $mixedValue = $jsonParser->anything('someKey');
     $arrayValue = $jsonParser->array('arrayKey');
@@ -152,9 +152,9 @@ $app->post('/json-endpoint', function (Request $request, Response $response, $ar
     $intValue = $jsonParser->int('intKey');
     $stringValue = $jsonParser->string('stringKey');
     $mongoIdValue = $jsonParser->mongoId('mongoIdKey');
-    
+
     // Do something with the values...
-    
+
     return $app->response()->json([
         'success' => true
     ]);

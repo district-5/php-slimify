@@ -28,6 +28,9 @@
   "require-dev": {
     "phpunit/phpunit": "^9"
   },
+  "suggest": {
+    "mongodb/mongodb": "To leverage better JSON parsing functionality for mongoId method"
+  },
   "autoload-dev": {
     "psr-4": { "SlimifyTests\\": "tests/" }
   }
