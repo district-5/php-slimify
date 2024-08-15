@@ -227,17 +227,12 @@ class JsonParser
                     if ($tmp->__toString() === $value) {
                         return $value;
                     }
-                    if ($required === true) {
-                        throw new InvalidJsonRequestException(
-                            sprintf('Request key was not a MongoID "%s"', $key)
-                        );
-                    }
-
-                    return $default;
                 } catch (Exception) {
                 }
+            } else {
+                // validated with regex
+                return $value;
             }
-            return $value;
         }
 
         if ($required === true) {
