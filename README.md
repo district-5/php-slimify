@@ -1,18 +1,14 @@
-Slimify
-=======
+District5 - Slimify
+======
 
-Requirements...
----------------
+![CI](https://github.com/district-5/php-slimify/actions/workflows/ci.yml/badge.svg?branch=master)
 
-```json
-{
-    "php": ">=7.1",
-    "slim/slim": "^4.0",
-    "slim/php-view": "^2.2",
-    "slim/psr7": "^0.5.0",
-    "ext-json": "*",
-    "php-di/slim-bridge": "^3.0"
-}
+### Composer...
+
+Use composer to add this library as a dependency onto your project.
+
+```
+composer require district5/slimify
 ```
 
 Set up...
