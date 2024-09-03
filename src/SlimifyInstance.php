@@ -73,7 +73,7 @@ class SlimifyInstance extends App
     public function addRouterWithCache(string $cacheLocation, bool $deleteInDevelopment = true): SlimifyInstance
     {
         if ($deleteInDevelopment === true && $this->isDevelopment() === true && file_exists($cacheLocation) && is_writable($cacheLocation)) {
-            unlink($cacheLocation);
+            @unlink($cacheLocation);
         }
         $this->addRoutingMiddleware();
         $this->getRouteCollector()->setCacheFile(

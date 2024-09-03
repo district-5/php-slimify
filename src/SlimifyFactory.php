@@ -2,7 +2,7 @@
 
 namespace Slimify;
 
-use DI\Container;
+use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
 
 /**
@@ -12,11 +12,11 @@ use Slim\Factory\AppFactory;
 class SlimifyFactory extends AppFactory
 {
     /**
-     * @param Container $container
+     * @param ContainerInterface $container
      * @param bool $isDevelopment
      * @return SlimifyInstance
      */
-    public static function createSlimify(Container $container, bool $isDevelopment): SlimifyInstance
+    public static function createSlimify(ContainerInterface $container, bool $isDevelopment): SlimifyInstance
     {
         $instance = new SlimifyInstance(
             self::determineResponseFactory(),

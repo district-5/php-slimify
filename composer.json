@@ -12,17 +12,17 @@
   ],
   "require": {
     "php": ">=8.1",
-    "slim/slim": "*",
-    "slim/php-view": "*",
-    "slim/psr7": "*",
-    "php-di/slim-bridge": "*",
     "ext-json": "*",
+    "district5/simple-session-store": "^1.1",
+    "php-di/php-di": "^7.0",
     "monolog/monolog": ">=2.3.5",
-    "district5/simple-session-store": "^1.1"
+    "slim/slim": "5.x-dev",
+    "slim/php-view": "*",
+    "slim/psr7": "*"
   },
   "autoload": {
     "psr-4": {
-      "Slimify\\": "src/Slimify/"
+      "Slimify\\": "src/"
     }
   },
   "require-dev": {
