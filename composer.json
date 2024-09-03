@@ -22,7 +22,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Slimify\\": "src/Slimify/"
+      "Slimify\\": "src/"
     }
   },
   "require-dev": {
