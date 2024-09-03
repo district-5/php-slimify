@@ -22,16 +22,17 @@ trait ViewTrait
      * Set the view to use, optionally providing 'key' to handle multiple instances of views.
      *
      * @param string $templatePath
-     * @param string $layout
+     * @param string|null $layout
      * @param array $params
      * @param string $key
      * @return $this
-     * @noinspection PhpUnused
      */
-    public function addView(string $templatePath, string $layout, array $params = [], string $key = 'default'): static
+    public function addView(string $templatePath, ?string $layout, array $params = [], string $key = 'default'): static
     {
         $view = new PhpRenderer($templatePath);
-        $view->setLayout($layout);
+        if ($layout !== null) {
+            $view->setLayout($layout);
+        }
         $view->addAttribute('app', $this);
         foreach ($params as $k => $v) {
             $view->addAttribute($k, $v);
