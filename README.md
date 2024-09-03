@@ -11,6 +11,11 @@ Use composer to add this library as a dependency onto your project.
 composer require district5/slimify
 ```
 
+### Breaking changes...
+
+Since the introduction of the development branch `feature/5.x`, the old SlimifyMiddleware project has been brought into
+the `\Slimify\Middleware` namespace within this project. This is to allow for a more cohesive project structure.
+
 Set up...
 ---------
 
@@ -72,6 +77,8 @@ $app->addRouterWithCache(
  * Add any middleware
  */
 // $app->add(new MyMiddleware());
+// Add gzip middleware
+// \Slimify\Middleware\GzipMiddleware::add($app);
 
 include '/path/to/my/routes.php';
 
@@ -92,7 +99,7 @@ $app->addErrorMiddleware(
     true,
     true
 )->setDefaultErrorHandler(
-    \SlimifyMiddleware\ErrorHandlingMiddleware::class
+    \Slimify\Middleware\ErrorHandlingMiddleware::class
 );
 
 /**
