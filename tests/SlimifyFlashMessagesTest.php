@@ -19,7 +19,6 @@
 namespace SlimifyTests;
 
 use DI\Container;
-use District5\SimpleSessionStore\Session;
 use District5\SimpleSessionStore\SessionException;
 use Slimify\SlimifyFactory;
 use Slimify\SlimifyFlashMessages;

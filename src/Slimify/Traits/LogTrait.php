@@ -2,7 +2,6 @@
 
 namespace Slimify\Traits;
 
-use DI\Container;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\RotatingFileHandler;
@@ -10,6 +9,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
@@ -30,7 +30,7 @@ trait LogTrait
     {
         $this->container->set(
             'logger',
-            function (/** @noinspection PhpUnusedParameterInspection */ Container $c) use ($logFilePath, $level, $maxFiles, $name) {
+            function (/** @noinspection PhpUnusedParameterInspection */ ContainerInterface $c) use ($logFilePath, $level, $maxFiles, $name) {
                 $logger = new Logger($name);
                 $formatter = new LineFormatter();
                 $fileHandler = new RotatingFileHandler($logFilePath, $maxFiles, $level);
@@ -56,7 +56,7 @@ trait LogTrait
     {
         $this->container->set(
             'logger',
-            function (/** @noinspection PhpUnusedParameterInspection */ Container $c) use ($level, $name) {
+            function (/** @noinspection PhpUnusedParameterInspection */ ContainerInterface $c) use ($level, $name) {
                 $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
 
                 $streamHandler = new StreamHandler('php://stdout', $level);
@@ -81,7 +81,7 @@ trait LogTrait
     {
         $this->container->set(
             'logger',
-            function (/** @noinspection PhpUnusedParameterInspection */ Container $c) use ($level, $name) {
+            function (/** @noinspection PhpUnusedParameterInspection */ ContainerInterface $c) use ($level, $name) {
                 $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message%\n");
 
                 $errorHandler = new ErrorLogHandler();
