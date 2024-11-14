@@ -166,6 +166,29 @@ class SlimifyResponse
     }
 
     /**
+     * @param resource $stream
+     * @param string $contentType
+     * @param string $encoding
+     * @return ResponseInterface
+     */
+    public function serveFileFromStream($stream, string $contentType = 'text/plain', string $encoding = 'utf-8'): ResponseInterface
+    {
+        $response = new Response();
+        $response->getBody()->write(
+            stream_get_contents($stream)
+        );
+
+        return $this->addCorsToResponseIfNecessary(
+            $response->withHeader(
+                'Content-Type',
+                sprintf('%s; charset=%s', $contentType, $encoding)
+            )->withStatus(
+                200
+            )
+        );
+    }
+
+    /**
      * @param string $url
      * @param int $status
      * @return ResponseInterface

@@ -115,5 +115,22 @@ class SlimifyResponseTest extends TestAbstract
         $this->assertEquals('no/type; charset=utf-16', $fileResponse->getHeaderLine('Content-Type'));
         $this->assertEquals('attachment; filename=foobar.txt', $fileResponse->getHeaderLine('Content-Disposition'));
         $this->assertEquals('foo.example.com', $fileResponse->getHeaderLine('Access-Control-Allow-Origin'));
+
+        $tmpFile = sys_get_temp_dir() . '/test-slimify.txt';
+        file_put_contents($tmpFile, 'Hello World');
+        $streamResponse = $response->serveFileFromStream(
+            fopen($tmpFile, 'r'),
+            'text/plain',
+            'utf-8'
+        );
+        $this->assertEquals('Hello World', $streamResponse->getBody()->__toString());
+        $this->assertEquals('text/plain; charset=utf-8', $streamResponse->getHeaderLine('Content-Type'));
+    }
+
+    protected function tearDown(): void
+    {
+        if (file_exists(sys_get_temp_dir() . '/test-slimify.txt')) {
+            unlink(sys_get_temp_dir() . '/test-slimify.txt');
+        }
     }
 }
