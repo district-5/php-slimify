@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="true" backupStaticAttributes="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" forceCoversAnnotation="false" processIsolation="false"
-         stopOnError="false" stopOnFailure="true" stopOnIncomplete="false" stopOnSkipped="false" timeoutForSmallTests="1" timeoutForMediumTests="10" timeoutForLargeTests="60" bootstrap="tests/bootstrap.php" cacheResult="false" verbose="true">
-    <coverage includeUncoveredFiles="true" pathCoverage="false" ignoreDeprecatedCodeUnits="true" disableCodeCoverageIgnore="true">
+<phpunit
+        backupGlobals="true"
+        colors="true"
+        processIsolation="false"
+        stopOnError="false"
+        stopOnFailure="true"
+        stopOnIncomplete="false"
+        stopOnSkipped="false"
+        timeoutForSmallTests="1"
+        timeoutForMediumTests="10"
+        timeoutForLargeTests="60"
+        bootstrap="tests/bootstrap.php"
+        cacheResult="false">
+    <coverage includeUncoveredFiles="true"
+              pathCoverage="false"
+              ignoreDeprecatedCodeUnits="true"
+              disableCodeCoverageIgnore="true">
+        <report>
+            <html outputDirectory="build/html" lowUpperBound="50" highLowerBound="90"/>
+            <clover outputFile="coverage.xml" />
+        </report>
+    </coverage>
+    <php>
+        <env name="NONE" value="not-set-yet" force="true"/>
+    </php>
+    <testsuites>
+        <testsuite name="TestSuite">
+            <directory>tests/</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+        <testdoxHtml outputFile="build/testdox.html"/>
+    </logging>
+    <source>
         <include>
             <directory>src</directory>
         </include>
         <exclude>
             <directory>tests</directory>
         </exclude>
-        <report>
-            <php outputFile="build/coverage/php.php"/>
-            <html outputDirectory="build/coverage/html" lowUpperBound="50" highLowerBound="90"/>
-        </report>
-    </coverage>
-    <testsuites>
-        <testsuite name="TestSuite">
-            <directory>tests/</directory>
-        </testsuite>
-    </testsuites>
-    <php>
-        <env name="NONE" value="not-set-yet" force="true"/>
-    </php>
+    </source>
 </phpunit>
