@@ -64,7 +64,7 @@ trait HttpNativeParamsTrait
      * @return int|null
      * @noinspection PhpUnused
      */
-    public function getPostParamInt(string $key, int $default = null): ?int
+    public function getPostParamInt(string $key, int|null $default = null): ?int
     {
         return $this->paramToInt(
             $this->getPostParam($key, $default),
@@ -97,7 +97,7 @@ trait HttpNativeParamsTrait
      * @param int|null $default
      * @return int|null
      */
-    public function getQueryParamInt(string $key, int $default = null): ?int
+    public function getQueryParamInt(string $key, int|null $default = null): ?int
     {
         return $this->paramToInt(
             $this->getQueryParam($key, $default),
@@ -123,7 +123,7 @@ trait HttpNativeParamsTrait
      * @param int|null $default
      * @return int|null
      */
-    protected function paramToInt(mixed $val, int $default = null): ?int
+    protected function paramToInt(mixed $val, int|null $default = null): ?int
     {
         if (is_int($val)) {
             return $val;

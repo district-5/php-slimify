@@ -27,6 +27,7 @@ use Slim\Psr7\Stream;
 use Slim\Psr7\Uri;
 use Slimify\SlimifyInstance;
 use SlimifyTests\TestAbstract;
+use Throwable;
 
 /**
  * Class ViewTest
@@ -34,6 +35,9 @@ use SlimifyTests\TestAbstract;
  */
 class ViewTest extends TestAbstract
 {
+    /**
+     * @throws Throwable
+     */
     public function testView()
     {
         $container = new Container();
