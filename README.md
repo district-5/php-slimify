@@ -1,18 +1,16 @@
 Slimify
 =======
 
-Requirements...
+[![CI](https://github.com/district-5/php-slimify/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/district-5/php-slimify/actions)
+[![Latest Stable Version](http://poser.pugx.org/district5/slimify/v)](https://packagist.org/packages/district5/slimify)
+[![PHP Version Require](http://poser.pugx.org/district5/slimify/require/php)](https://packagist.org/packages/district5/slimify)
+[![Codecov](https://codecov.io/gh/district-5/php-slimify/branch/master/graph/badge.svg)](https://codecov.io/gh/district-5/php-slimify)
+
+Installation...
 ---------------
 
-```json
-{
-    "php": ">=7.1",
-    "slim/slim": "^4.0",
-    "slim/php-view": "^2.2",
-    "slim/psr7": "^0.5.0",
-    "ext-json": "*",
-    "php-di/slim-bridge": "^3.0"
-}
+```
+composer require district5/slimify
 ```
 
 Set up...
