@@ -47,10 +47,10 @@ $app->addView(
  * Add a file log.
  */
 //$app->addFileLog(
-//    '/path/to/log/app.log',
-//    \Monolog\Logger::DEBUG,
-//    1,
-//    'app'
+//    '/path/to/log/app.log', // log file
+//    \Monolog\Logger::DEBUG, // log level
+//    5, // number of files to keep
+//    'app' // logger name
 //);
 
 /**
@@ -58,7 +58,6 @@ $app->addView(
  */
 $app->addStdOutLog(
     \Monolog\Logger::DEBUG,
-    1,
     'app'
 );
 

@@ -3,7 +3,6 @@
 namespace Slimify\Traits;
 
 use Slim\Psr7\Request;
-use Slim\Views\PhpRenderer;
 
 /**
  * Trait RequestHeaderValuesTrait
