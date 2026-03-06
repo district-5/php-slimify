@@ -127,6 +127,69 @@ class SlimifyResponseTest extends TestAbstract
         $this->assertEquals('text/plain; charset=utf-8', $streamResponse->getHeaderLine('Content-Type'));
     }
 
+    public function testAdditionalHeadersSetOnResponse(): void
+    {
+        $container = new Container();
+        $instance = new SlimifyInstance(
+            new ResponseFactory(),
+            $container
+        );
+        $instance->setContainer($container);
+        $instance->setDevelopment(true);
+
+        $fakeRequestBody = fopen('php://temp', 'r+');
+        fwrite($fakeRequestBody, 'foo=bar&baz=qux');
+        fseek($fakeRequestBody, 0);
+
+        $instance->setInterfaces(
+            new Request(
+                'POST',
+                new Uri('https', 'example.com', 443, '/test'),
+                new Headers(['X-Foo' => ['Bar']]),
+                ['IS_A_COOKIE' => 'NOT REALLY'],
+                ['IS_A_SERVER' => 'NOT REALLY'],
+                new Stream($fakeRequestBody),
+            ),
+            new Response()
+        );
+
+        $response = $instance->response();
+        $response->addHeader('X-Test', 'TestValue');
+        $response = $response->json(['Foo' => 'Bar']);
+        $this->assertCount(3, $response->getHeaders()); // X-Test, Foo and Content-Type from JSON response
+        $this->assertEquals('TestValue', $response->getHeaderLine('X-Test'));
+    }
+
+    public function testResponseHeadersAreEmpty(): void
+    {
+        $container = new Container();
+        $instance = new SlimifyInstance(
+            new ResponseFactory(),
+            $container
+        );
+        $instance->setContainer($container);
+        $instance->setDevelopment(true);
+
+        $fakeRequestBody = fopen('php://temp', 'r+');
+        fwrite($fakeRequestBody, 'foo=bar&baz=qux');
+        fseek($fakeRequestBody, 0);
+
+        $instance->setInterfaces(
+            new Request(
+                'POST',
+                new Uri('https', 'example.com', 443, '/test'),
+                new Headers(['X-Foo' => ['Bar']]),
+                ['IS_A_COOKIE' => 'NOT REALLY'],
+                ['IS_A_SERVER' => 'NOT REALLY'],
+                new Stream($fakeRequestBody),
+            ),
+            new Response()
+        );
+
+        $response = $instance->response();
+        $this->assertEmpty($response->getHeaders());
+    }
+
     protected function tearDown(): void
     {
         if (file_exists(sys_get_temp_dir() . '/test-slimify.txt')) {

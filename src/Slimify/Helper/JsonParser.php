@@ -221,6 +221,7 @@ class JsonParser
     {
         $value = $this->string($key, $required. $default);
         if (preg_match('/^[0-9a-fA-F]{24}$/', $value)) {
+            // @codeCoverageIgnoreStart
             if (class_exists('MongoDB\BSON\ObjectId')) {
                 try {
                     $tmp = new \MongoDB\BSON\ObjectId($value);
@@ -233,6 +234,7 @@ class JsonParser
                 // validated with regex
                 return $value;
             }
+            // @codeCoverageIgnoreEnd
         }
 
         if ($required === true) {

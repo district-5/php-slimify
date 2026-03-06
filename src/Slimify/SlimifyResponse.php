@@ -4,6 +4,8 @@ namespace Slimify;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Slim\Psr7\Header;
+use Slim\Psr7\Headers;
 use Slim\Psr7\Response;
 
 /**
@@ -28,7 +30,13 @@ class SlimifyResponse
     protected ?SlimifyCors $cors = null;
 
     /**
+     * @var Headers|null
+     */
+    protected Headers|null $headers = null;
+
+    /**
      * SlimifyResponse constructor.
+     * @param RequestInterface $request
      * @param ResponseInterface $response
      */
     public function __construct(RequestInterface $request, ResponseInterface $response)
@@ -90,12 +98,13 @@ class SlimifyResponse
      */
     public function jsonFromString(string $payload, $status = 200): ResponseInterface
     {
-        $response = $this->response->withHeader(
-            'Content-Type',
-            'application/json'
-        )->withStatus(
+        $this->addHeader('Content-Type', 'application/json');
+        $this->buildResponse();
+
+        $response = $this->response->withStatus(
             $status
         );
+
         $response->getBody()->write(
             $payload
         );
@@ -124,13 +133,9 @@ class SlimifyResponse
      */
     public function plainText($content, $status = 200): ResponseInterface
     {
-        $response = $this->response->withHeader(
-            'Content-Type',
-            'text/plain'
-        )->withHeader(
-            'Content-Length',
-            strlen($content)
-        )->withStatus(
+        $this->addHeader('Content-Type', 'text/plain');
+        $this->addHeader('Content-Length', strlen($content));
+        $response = $this->response->withStatus(
             $status
         );
         $response->getBody()->write(
@@ -148,18 +153,17 @@ class SlimifyResponse
      */
     public function sendFile(string $content, string $fileName, string $contentType = 'text/plain', string $encoding = 'utf-8'): ResponseInterface
     {
-        $response = new Response();
-        $response->getBody()->write(
+        $this->response = new Response();
+        $this->response->getBody()->write(
             $content
         );
+        $this->addHeader('Content-Type', sprintf('%s; charset=%s', $contentType, $encoding));
+        $this->addHeader('Content-Disposition', 'attachment; filename=' . $fileName);
+
+        $this->buildResponse();
 
         return $this->addCorsToResponseIfNecessary(
-            $response->withHeader(
-                'Content-Type',
-                sprintf('%s; charset=%s', $contentType, $encoding)
-            )->withHeader(
-                'Content-Disposition', 'attachment; filename=' . $fileName
-            )->withStatus(
+            $this->response->withStatus(
                 200
             )
         );
@@ -173,16 +177,16 @@ class SlimifyResponse
      */
     public function serveFileFromStream($stream, string $contentType = 'text/plain', string $encoding = 'utf-8'): ResponseInterface
     {
-        $response = new Response();
-        $response->getBody()->write(
+        $this->response = new Response();
+        $this->response->getBody()->write(
             stream_get_contents($stream)
         );
 
+        $this->addHeader('Content-Type', sprintf('%s; charset=%s', $contentType, $encoding));
+        $this->buildResponse();
+
         return $this->addCorsToResponseIfNecessary(
-            $response->withHeader(
-                'Content-Type',
-                sprintf('%s; charset=%s', $contentType, $encoding)
-            )->withStatus(
+            $this->response->withStatus(
                 200
             )
         );
@@ -196,10 +200,10 @@ class SlimifyResponse
      */
     public function redirect($url, $status = 302): ResponseInterface
     {
-        return $this->response->withHeader(
-            'Location',
-            $url
-        )->withStatus(
+        $this->addHeader('Location', $url);
+        $this->buildResponse();
+
+        return $this->response->withStatus(
             $status
         );
     }
@@ -236,6 +240,51 @@ class SlimifyResponse
     public function clearResponse(): void
     {
         $responseClass = get_class($this->response);
+        $this->headers = new Headers();
         $this->response = new $responseClass();
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return void
+     */
+    public function addHeader(string $name, string $value): void
+    {
+        if (!isset($this->headers)) {
+            $this->headers = new Headers();
+        }
+        $this->headers->removeHeader($name);
+        $this->headers->addHeader(
+            $name,
+            $value
+        );
+    }
+
+    /**
+     * @param bool $originalCase
+     * @return array
+     */
+    public function getHeaders(bool $originalCase = false): array
+    {
+        if (!isset($this->headers)) {
+            $this->headers = new Headers();
+        }
+
+        return $this->headers->getHeaders($originalCase);
+    }
+
+    /**
+     * @return void
+     */
+    protected function buildResponse(): void
+    {
+        $headers = $this->getHeaders(true);
+        foreach ($headers as $key => $value) {
+            $this->response = $this->response->withHeader(
+                $key,
+                $value[0]
+            );
+        }
     }
 }
